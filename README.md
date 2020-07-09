@@ -12,3 +12,4 @@ supported API methods
 - DeleteListener
 - EnableListener
 - SetServerPassword
+- CreateHub

@@ -3,7 +3,6 @@ package methods
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/terassyi/go-softether-api/pkg"
 )
 
@@ -52,27 +51,6 @@ func newDeleteListenerParams(port int) *DeleteListenerParams {
 	return &DeleteListenerParams{Port: port}
 }
 
-func (p *DeleteListenerParams) Set(key string, val interface{}) error {
-	switch key {
-	case "Port":
-		switch v := val.(type) {
-		case int:
-			{
-				p.Port = v
-				return nil
-			}
-		default:
-			return fmt.Errorf("invalid parameter type")
-		}
-	}
-	return fmt.Errorf("not found such a parameter")
-}
-
-func (p *DeleteListenerParams) Get(key string) (interface{}, error) {
-	switch key {
-	case "Port":
-		return p.Port, nil
-	default:
-		return nil, fmt.Errorf("not found such a parameter")
-	}
+func (p *DeleteListenerParams) Tags() []string {
+	return []string{"Port_u32"}
 }

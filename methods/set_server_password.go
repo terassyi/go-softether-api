@@ -2,7 +2,6 @@ package methods
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/terassyi/go-softether-api/pkg"
 )
 
@@ -14,7 +13,7 @@ type SetServerPassword struct {
 func NewSetServerPassword() *SetServerPassword {
 	return &SetServerPassword{
 		Base:   pkg.NewBase("SetServerPassword"),
-		Params: &SetServerPasswordParams{IntValue: 0},
+		Params: newSetServerPasswordParams("test"),
 	}
 }
 
@@ -46,29 +45,6 @@ func newSetServerPasswordParams(text string) *SetServerPasswordParams {
 	return &SetServerPasswordParams{PlainTextPassword: text}
 }
 
-func (p *SetServerPasswordParams) Set(key string, val interface{}) error {
-	switch key {
-	case "PlainTextPassword":
-		{
-			switch v := val.(type) {
-			case string:
-				{
-					p.PlainTextPassword = v
-					return nil
-				}
-			default:
-				return fmt.Errorf("invalid parameter type")
-			}
-		}
-	}
-	return fmt.Errorf("not found such a parameter")
-}
-
-func (p *SetServerPasswordParams) Get(key string) (interface{}, error) {
-	switch key {
-	case "PlainTextPassword":
-		return p.PlainTextPassword, nil
-	default:
-		return nil, fmt.Errorf("not found such a parameter")
-	}
+func (p *SetServerPasswordParams) Tags() []string {
+	return []string{"PlainTextPassword_str"}
 }

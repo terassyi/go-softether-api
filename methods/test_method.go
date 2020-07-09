@@ -2,7 +2,6 @@ package methods
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/terassyi/go-softether-api/pkg"
 )
 
@@ -18,53 +17,30 @@ func NewTest() *Test {
 	}
 }
 
-func (t *Test) Name() string {
-	return t.Base.Name
+func (m *Test) Name() string {
+	return m.Base.Name
 }
 
-func (t *Test) GetId() int {
-	return t.Id
+func (m *Test) GetId() int {
+	return m.Id
 }
 
-func (t *Test) SetId(id int) {
-	t.Base.Id = id
+func (m *Test) SetId(id int) {
+	m.Base.Id = id
 }
 
-func (t *Test) Parameter() pkg.Params {
-	return t.Params
+func (m *Test) Parameter() pkg.Params {
+	return m.Params
 }
 
-func (t *Test) Marshall() ([]byte, error) {
-	return json.Marshal(t)
+func (m *Test) Marshall() ([]byte, error) {
+	return json.Marshal(m)
 }
 
 type TestParams struct {
 	IntValue int `json:"IntValue_u32"`
 }
 
-func (p *TestParams) Set(key string, val interface{}) error {
-	switch key {
-	case "IntValue":
-		{
-			switch v := val.(type) {
-			case int:
-				{
-					p.IntValue = v
-					return nil
-				}
-			default:
-				return fmt.Errorf("invalid parameter type")
-			}
-		}
-	}
-	return fmt.Errorf("not found such a parameter")
-}
-
-func (p *TestParams) Get(key string) (interface{}, error) {
-	switch key {
-	case "IntValue":
-		return p.IntValue, nil
-	default:
-		return nil, fmt.Errorf("not found such a parameter")
-	}
+func (p *TestParams) Tags() []string {
+	return []string{"IntValue_u32"}
 }

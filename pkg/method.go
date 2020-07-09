@@ -10,8 +10,7 @@ type Method interface {
 }
 
 type Params interface {
-	Set(key string, val interface{}) error
-	Get(key string) (interface{}, error)
+	Tags() []string
 }
 
 const (

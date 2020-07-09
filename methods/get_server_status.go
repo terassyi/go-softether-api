@@ -45,10 +45,6 @@ func (g *GetServerStatus) Marshall() ([]byte, error) {
 
 type GetServerStatusParams struct{}
 
-func (p *GetServerStatusParams) Set(key string, val interface{}) error {
-	return nil
-}
-
-func (p *GetServerStatusParams) Get(key string) (interface{}, error) {
-	return nil, nil
+func (p *GetServerStatusParams) Tags() []string {
+	return []string{}
 }

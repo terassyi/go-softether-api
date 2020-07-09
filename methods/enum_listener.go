@@ -45,10 +45,6 @@ func (g *EnumListener) Marshall() ([]byte, error) {
 
 type EnumListenerParams struct{}
 
-func (p *EnumListenerParams) Set(_key string, _val interface{}) error {
-	return nil
-}
-
-func (p *EnumListenerParams) Get(_key string) (interface{}, error) {
-	return nil, nil
+func (p *EnumListenerParams) Tags() []string {
+	return []string{}
 }

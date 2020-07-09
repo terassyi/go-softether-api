@@ -45,10 +45,6 @@ func (g *GetServerInfo) Marshall() ([]byte, error) {
 
 type GetServerInfoParams struct{}
 
-func (p *GetServerInfoParams) Set() error {
-	return nil
-}
-
-func (p *GetServerInfoParams) Get() (interface{}, error) {
-	return nil, nil
+func (p *GetServerInfoParams) Tags() []string {
+	return []string{}
 }
