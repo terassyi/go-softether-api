@@ -13,14 +13,6 @@ type testParams struct {
 	FieldList []int  `json:"FieldList"`
 }
 
-func (p *testParams) Set(key string, val interface{}) error {
-	return nil
-}
-
-func (p *testParams) Get(key string) (interface{}, error) {
-	return nil, nil
-}
-
 func (p *testParams) Tags() []string {
 	return []string{
 		"Field1_str",

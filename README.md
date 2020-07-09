@@ -13,3 +13,11 @@ supported API methods
 - EnableListener
 - SetServerPassword
 - CreateHub
+- SetHub
+- EnumHub
+- DeleteHub
+- GetHubStatus
+- SetHubOnline
+- EnumConnection
+- DisconnectConnection
+- GetConnectionInfo
