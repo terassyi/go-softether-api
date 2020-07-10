@@ -21,3 +21,7 @@ supported API methods
 - EnumConnection
 - DisconnectConnection
 - GetConnectionInfo
+- CreateUser
+- SetUser
+- GetUser
+- EnumUser
