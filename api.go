@@ -4,193 +4,106 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"github.com/terassyi/go-softether-api/pkg"
 	"io/ioutil"
-	"log"
-	"math/rand"
 	"net/http"
-	"strconv"
-	"time"
-)
-
-//json-rpc const field
-const (
-	Jsonrpc      = "2.0"
-	AuthType_u32 = 1 //password authentication
-
 )
 
 //to handle softether vpn server json-rpc api
-
-type SoftEtherAPIConn struct {
-	Host string
-	Port string
-	// Conn net.Conn
-	Conn     *http.Client
+type Api struct {
+	Host     string
+	Port     int
 	Hub      string
 	Password string
-	Id       APIId
+	id       Id
+	conn     *http.Client
 }
 
-type APIMethod interface {
-	Name() string
-	GetId() int
-	ToJSON() ([]byte, error)
+// Id interface is used for request id
+type Id interface {
+	Incl()
+	Describe() int
 }
 
-type Method struct {
-	BaseField
-	params Params
+// id struct is the implement of Id interface
+type id int
+
+func initId() Id {
+	return id(0)
 }
 
-type BaseField struct {
-	Jsonrpc string
-	Id      APIId
-	Method  string
+// This method increment an id
+func (i id) Incl() {
+	i += 1
 }
 
-func newBaseField(method string, id APIId) BaseField {
-	return BaseField{
-		Jsonrpc: Jsonrpc,
-		Id:      id,
-		Method:  method,
+func (i id) Describe() int {
+	return int(i)
+}
+
+func New(host string, port int, hub, password string) *Api {
+	return &Api{
+		Host:     host,
+		Port:     port,
+		Hub:      hub,
+		Password: password,
+		id:       initId(),
+		conn:     connect(),
 	}
 }
 
-func (api *SoftEtherAPIConn) NewRequest(base BaseField, p Params) APIMethod {
-	return Method{
-		BaseField: base,
-		params:    p,
+func (api *Api) entrypoint() string {
+	return fmt.Sprintf("https://%s:%d/api", api.Host, api.Port)
+}
+
+func (api *Api) Call(method pkg.Method) (map[string]interface{}, error) {
+	api.id.Incl()
+	method.SetId(api.id.Describe())
+	body, err := method.Marshall()
+	fmt.Println(string(body))
+	if err != nil {
+		return nil, fmt.Errorf("[error] failed to marshall request: %v", err)
 	}
-}
-
-type Params interface {
-	Show()
-	ToMap() map[string]interface{}
-}
-
-type APIId int
-
-func (i *APIId) call() {
-	*i += 1
-}
-
-func NewSoftEtherAPIConn(host string, port int) *SoftEtherAPIConn {
-	return &SoftEtherAPIConn{
-		Host: host,
-		Port: strconv.Itoa(port),
+	req, err := http.NewRequest("POST", api.entrypoint(), bytes.NewBuffer(body))
+	if err != nil {
+		return nil, fmt.Errorf("[error] failed to create new http request: %v", err)
 	}
+	// set headers
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-VPNADMIN-HUBNAME", api.Hub)
+	req.Header.Set("X-VPNADMIN-PASSWORD", api.Password)
+	// send an api request
+	res, err := api.conn.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("[error] failed to call: %v", err)
+	}
+	return validateResponse(res)
 }
 
-func (api *SoftEtherAPIConn) Connect() {
-	// sock, err := tls.Dial("tcp", fmt.Sprintf("%s:%s", api.Host, api.Port), &tls.Config{InsecureSkipVerify: true})
+func connect() *http.Client {
 	tl := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
 	}
-	sock := &http.Client{
-		Transport: tl,
-	}
-	api.Conn = sock
+	return &http.Client{Transport: tl}
 }
 
-// func (api *SoftEtherAPIConn) Close() error {
-// 	return api.Conn.
-// }
-
-func (api *SoftEtherAPIConn) Request(method APIMethod) (*http.Response, error) {
-	//convert the method to json
-	body, err := method.ToJSON()
-	if err != nil {
-		return nil, err
-	}
-	//build request body
-	req, err := http.NewRequest("POST", api.url(), bytes.NewBuffer(body))
-	if err != nil {
-		return nil, err
-	}
-	//set headers
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-VPNADMIN-HUBNAME", api.Hub)
-	req.Header.Set("X-VPNADMIN-PASSWORD", api.Password)
-	fmt.Println(*req)
-	//send request
-	return api.Conn.Do(req)
-}
-
-func Response(res *http.Response) (map[string]interface{}, error) {
+func validateResponse(res *http.Response) (map[string]interface{}, error) {
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("[error] failed to read: %v", err)
 	}
-	//body is json format
-	mapedBody := make(map[string]interface{})
-	err = json.Unmarshal(body, &mapedBody)
+	fmt.Println(string(body))
+	b := make(map[string]interface{})
+	err = json.Unmarshal(body, &b)
 	if err != nil {
 		return nil, err
 	}
-	log.Println(mapedBody)
-	return mapedBody, nil
-}
-
-func ValidateResponse(res map[string]interface{}) bool {
-	if _, ok := res["result"]; ok {
-		return ok
+	if _, ok := b["result"]; ok {
+		return b["result"].(map[string]interface{}), nil
 	}
-	return false
-}
-
-func (api *SoftEtherAPIConn) url() string {
-	return fmt.Sprintf("https://%s:%s/api", api.Host, api.Port)
-}
-
-const (
-	letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-	letterIdxMask = 0x3F // 63 0b111111
-)
-
-func GeneratePassword() string {
-	rand.Seed(time.Now().UTC().UnixNano())
-	pass := make([]byte, 6)
-	for i := range pass {
-		pass[i] = letterBytes[rand.Intn(len(letterBytes))]
-	}
-	return string(pass)
-}
-
-func (m Method) Name() string {
-	return m.Method
-}
-
-func (m Method) GetId() int {
-	return int(m.Id)
-}
-
-func (m Method) ToMap() (map[string]interface{}, error) {
-	methodMap := make(map[string]interface{})
-	methodMap["jsonrpc"] = m.Jsonrpc
-	methodMap["id"] = int(m.Id)
-	methodMap["method"] = m.Method
-
-	paramMap := make(map[string]interface{})
-	switch method := m.params.(type) {
-	case CreateUserParams:
-		paramMap = method.ToMap()
-		methodMap["params"] = paramMap
-		return methodMap, nil
-	default:
-		paramMap = nil
-		return nil, errors.New("Can't decode to map.")
-	}
-}
-
-func (m Method) ToJSON() ([]byte, error) {
-	reqMap, err := m.ToMap()
-	if err != nil {
-		return nil, err
-	}
-	return json.Marshal(reqMap)
+	return nil, fmt.Errorf("%v", b["error"])
 }

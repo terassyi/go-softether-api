@@ -1,4 +1,4 @@
-package softetherapi
+package pkg
 
 /* CreateUser input
 {
