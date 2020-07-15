@@ -8,7 +8,7 @@ import (
 
 type EnumListener struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *EnumListenerParams `json:"params"`
 }
 
 func (g *EnumListener) Parameter() pkg.Params {

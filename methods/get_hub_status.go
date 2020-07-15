@@ -7,7 +7,7 @@ import (
 
 type GetHubStatus struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *GetHubStatusParams `json:"params"`
 }
 
 func NewGetHubStatus(name string) *GetHubStatus {

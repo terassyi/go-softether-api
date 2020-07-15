@@ -7,7 +7,7 @@ import (
 
 type SetServerPassword struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *SetServerPasswordParams `json:"params"`
 }
 
 func NewSetServerPassword() *SetServerPassword {

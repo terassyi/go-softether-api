@@ -7,7 +7,7 @@ import (
 
 type EnumUser struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *EnumUserParams `json:"params"`
 }
 
 func (g *EnumUser) Parameter() pkg.Params {

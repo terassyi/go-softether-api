@@ -8,7 +8,7 @@ import (
 
 type EnumHub struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *EnumHubParams `json:"params"`
 }
 
 func (g *EnumHub) Parameter() pkg.Params {

@@ -8,7 +8,7 @@ import (
 
 type GetHub struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *GetHubParams `json:"params"`
 }
 
 func NewGetHub(name string) *GetHub {

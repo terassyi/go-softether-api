@@ -8,7 +8,7 @@ import (
 
 type DeleteListener struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *DeleteListenerParams `json:"params"`
 }
 
 func (g *DeleteListener) Parameter() pkg.Params {

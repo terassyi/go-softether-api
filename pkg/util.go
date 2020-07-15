@@ -18,6 +18,15 @@ func StructToMap(params Params) (map[string]interface{}, error) {
 	return splitTypes(dataMap), nil
 }
 
+// params typ must be empty.
+func MapToStruct(data map[string]interface{}, typ Params) error {
+	bytes, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(bytes, typ)
+}
+
 func splitTypes(params map[string]interface{}) map[string]interface{} {
 	data := make(map[string]interface{})
 	for k, v := range params {

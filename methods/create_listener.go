@@ -8,7 +8,7 @@ import (
 
 type CreateListener struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *CreateListenerParams `json:"params"`
 }
 
 func (g *CreateListener) Parameter() pkg.Params {

@@ -8,7 +8,7 @@ import (
 
 type EnableListener struct {
 	pkg.Base
-	Params pkg.Params `josn:"params"`
+	Params *EnableListenerParams `json:"params"`
 }
 
 func (g *EnableListener) Parameter() pkg.Params {

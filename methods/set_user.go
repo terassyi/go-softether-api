@@ -10,7 +10,7 @@ import (
 
 type SetUSer struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *SetUSerParams `json:"params"`
 }
 
 func (g *SetUSer) Parameter() pkg.Params {

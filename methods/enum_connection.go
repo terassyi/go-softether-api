@@ -8,7 +8,7 @@ import (
 
 type EnumConnection struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *EnumConnectionParams `json:"params"`
 }
 
 func (g *EnumConnection) Parameter() pkg.Params {

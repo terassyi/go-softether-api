@@ -8,7 +8,7 @@ import (
 
 type GetServerStatus struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *GetServerStatusParams `json:"params"`
 }
 
 func (g *GetServerStatus) Parameter() pkg.Params {

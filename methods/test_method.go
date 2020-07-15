@@ -7,7 +7,7 @@ import (
 
 type Test struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *TestParams `json:"params"`
 }
 
 func NewTest() *Test {

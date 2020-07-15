@@ -7,7 +7,7 @@ import (
 
 type GetConnectionInfo struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *GetConnectionInfoParams `json:"params"`
 }
 
 func NewGetConnectionInfo(name string) *GetConnectionInfo {

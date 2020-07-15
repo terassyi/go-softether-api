@@ -7,7 +7,7 @@ import (
 
 type DisconnectConnection struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *DisconnectConnectionParams `json:"params"`
 }
 
 func NewDisconnectConnection(name string) *DisconnectConnection {

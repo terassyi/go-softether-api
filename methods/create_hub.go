@@ -7,7 +7,7 @@ import (
 
 type CreateHub struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *CreateHubParams `json:"params"`
 }
 
 func NewCreateHub(name, password string, online bool) *CreateHub {

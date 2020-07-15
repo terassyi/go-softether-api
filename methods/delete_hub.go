@@ -8,13 +8,13 @@ import (
 
 type DeleteHub struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *DeleteHubParams `json:"params"`
 }
 
 func NewDeleteHub(name string) *DeleteHub {
 	return &DeleteHub{
 		Base:   pkg.NewBase("DeleteHub"),
-		Params: newDisconnectConnectionParams(name),
+		Params: newDeleteHubParams(name),
 	}
 }
 func (m *DeleteHub) Name() string {
@@ -44,6 +44,10 @@ func (m *DeleteHub) Marshall() ([]byte, error) {
 
 type DeleteHubParams struct {
 	HubName string `json:"HubName_str"`
+}
+
+func newDeleteHubParams(hub string) *DeleteHubParams {
+	return &DeleteHubParams{HubName: hub}
 }
 
 func (p *DeleteHubParams) Tags() []string {

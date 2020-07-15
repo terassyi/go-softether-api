@@ -7,7 +7,7 @@ import (
 
 type SetHubOnline struct {
 	pkg.Base
-	Params pkg.Params `json:"params"`
+	Params *SetHubOnlineParams `json:"params"`
 }
 
 func NewSetHubOnline(name string, online bool) *SetHubOnline {
