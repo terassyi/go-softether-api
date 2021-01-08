@@ -21,6 +21,13 @@ supported API methods
 - EnumConnection
 - DisconnectConnection
 - GetConnectionInfo
+- CreateLink
+- GetLink
+- SetLink
+- EnumLink
+- SetLinkOnline
+- SetLinkOffline
+- DeleteLink
 - CreateUser
 - SetUser
 - GetUser
