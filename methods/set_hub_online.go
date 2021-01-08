@@ -2,6 +2,7 @@ package methods
 
 import (
 	"encoding/json"
+
 	"github.com/terassyi/go-softether-api/pkg"
 )
 
@@ -38,20 +39,20 @@ func (m *SetHubOnline) Marshall() ([]byte, error) {
 }
 
 type SetHubOnlineParams struct {
-	Name   string `json:"Name_str"`
-	Online bool   `json:"Online_bool"`
+	HubName string `json:"HubName_str"`
+	Online  bool   `json:"Online_bool"`
 }
 
 func newSetHubOnlineParams(name string, online bool) *SetHubOnlineParams {
 	return &SetHubOnlineParams{
-		Name:   name,
-		Online: online,
+		HubName: name,
+		Online:  online,
 	}
 }
 
 func (p *SetHubOnlineParams) Tags() []string {
 	return []string{
-		"Name_str",
+		"HubName_str",
 		"Online_bool",
 	}
 }
