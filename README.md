@@ -41,6 +41,11 @@ supported API methods
 - GetSecureNATOption
 - EnumNAT
 - EnumDHCP
+- EnumEthernet
+- AddLocalBridge
+- DeleteLocalBridge
+- EnumLocalBridge
+- GetBridgeSupport
 
 ## Usage
 
